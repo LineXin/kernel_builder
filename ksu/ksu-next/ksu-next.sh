@@ -37,6 +37,3 @@ fi
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-ksn${KSU_ver}\"/" "${defconfig_file}"
 
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
-
-echo -e " \nincludes KernelSU-Next, ver ${KSU_ver}" >> banner_append
-echo -e " \nincludes SuSFS v2.1.0" >> banner_append
