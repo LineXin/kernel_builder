@@ -34,7 +34,11 @@ else
   exit 1
 fi
 
-sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-sukisu${KSU_ver}susfs\"/" "${defconfig_file}"
+if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
+    sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
+fi
+
+sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-sukisu${KSU_ver}\"/" "${defconfig_file}"
 
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
 
