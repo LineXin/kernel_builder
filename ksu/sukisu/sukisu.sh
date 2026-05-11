@@ -16,6 +16,9 @@ KSU_ver=$(($KSU_git_ver + 10000 + 200))
 patchesdir="$outside/ksu/sukisu/hooks"
 suspatchesdir="$outside/ksu/sukisu/sus/"
 
+sed -i 's/susfs_is_sdcard_android_data_decrypted/susfs_is_sdcard_android_data_not_decrypted/g' fs/namespace.c
+sed -i 's/READ_ONCE(susfs_is_sdcard_android_data_not_decrypted)/static_branch_unlikely(\&susfs_is_sdcard_android_data_not_decrypted)/g' fs/namespace.c
+
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
     patch -p1 < "$patch_file"
@@ -33,19 +36,6 @@ else
   echo "patching ksu susfs failed, the kernel version you want to patch doesnt have patches here yet"
   exit 1
 fi
-
-sed -i 's/susfs_is_sdcard_android_data_decrypted/susfs_is_sdcard_android_data_not_decrypted/g' fs/namespace.c
-sed -i 's/READ_ONCE(susfs_is_sdcard_android_data_not_decrypted)/static_branch_unlikely(\&susfs_is_sdcard_android_data_not_decrypted)/g' fs/namespace.c
-awk '
-/susfs_alloc_unshare_ksu_vfsmnt/ { count1++ }
-/susfs_alloc_non_unshare_ksu_vfsmnt/ { count2++ }
-count1 > 1 && /susfs_alloc_unshare_ksu_vfsmnt/,/^}$/ { next }
-count2 > 1 && /susfs_alloc_non_unshare_ksu_vfsmnt/,/^}$/ { next }
-{ print }
-' fs/namespace.c > tmp && mv tmp fs/namespace.c
-for i in 1 2 3 4 5; do
-  echo "#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT" >> fs/namespace.c
-done
 
 if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
     sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
