@@ -16,6 +16,9 @@ KSU_ver=$(($KSU_git_ver + 10000 + 200))
 patchesdir="$outside/ksu/sukisu/hooks"
 suspatchesdir="$outside/ksu/sukisu/sus/"
 
+sed -i '/susfs_alloc_unshare_ksu_vfsmnt/d' fs/namespace.c
+sed -i '/susfs_alloc_non_unshare_ksu_vfsmnt/d' fs/namespace.c
+
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
     patch -p1 < "$patch_file"
@@ -36,8 +39,6 @@ fi
 
 sed -i 's/susfs_is_sdcard_android_data_decrypted/susfs_is_sdcard_android_data_not_decrypted/g' fs/namespace.c
 sed -i 's/READ_ONCE(susfs_is_sdcard_android_data_not_decrypted)/static_branch_unlikely(\&susfs_is_sdcard_android_data_not_decrypted)/g' fs/namespace.c
-awk 'BEGIN { count = 0; skip = 0 } /static struct mount \*susfs_alloc_unshare_ksu_vfsmnt/ { count++ } count == 2 { skip = 1 } count == 2 && /^}$/ { skip = 0; next } !skip' fs/namespace.c > fs/namespace.c.tmp && mv fs/namespace.c.tmp fs/namespace.c
-awk 'BEGIN { count = 0; skip = 0 } /static struct mount \*susfs_alloc_non_unshare_ksu_vfsmnt/ { count++ } count == 2 { skip = 1 } count == 2 && /^}$/ { skip = 0; next } !skip' fs/namespace.c > fs/namespace.c.tmp && mv fs/namespace.c.tmp fs/namespace.c
 
 if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
     sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
