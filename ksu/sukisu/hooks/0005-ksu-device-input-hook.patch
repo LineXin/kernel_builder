@@ -1,4 +1,3 @@
-cat > "$patchesdir/0005-ksu-input-hook.patch" << 'EOF'
 diff --git a/drivers/input/input.c b/drivers/input/input.c
 index 444ef58..9a8c5d1 100644
 --- a/drivers/input/input.c
