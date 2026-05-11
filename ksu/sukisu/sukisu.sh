@@ -36,11 +36,13 @@ fi
 
 sed -i 's/susfs_is_sdcard_android_data_decrypted/susfs_is_sdcard_android_data_not_decrypted/g' fs/namespace.c
 sed -i 's/READ_ONCE(susfs_is_sdcard_android_data_not_decrypted)/static_branch_unlikely(\&susfs_is_sdcard_android_data_not_decrypted)/g' fs/namespace.c
-awk 'BEGIN { count = 0; skip = 0 } /static struct mount \*susfs_alloc_unshare_ksu_vfsmnt/ { count++ } count == 2 { skip = 1 } count == 2 && /^}$/ { skip = 0; next } !skip' fs/namespace.c > fs/namespace.c.tmp && mv fs/namespace.c.tmp fs/namespace.c
-awk 'BEGIN { count = 0; skip = 0 } /static struct mount \*susfs_alloc_non_unshare_ksu_vfsmnt/ { count++ } count == 2 { skip = 1 } count == 2 && /^}$/ { skip = 0; next } !skip' fs/namespace.c > fs/namespace.c.tmp && mv fs/namespace.c.tmp fs/namespace.c
-sed -i '/^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT$/,/^#endif/ { /^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT/d; /^#endif.*CONFIG_KSU_SUSFS_SUS_MOUNT/d }' fs/namespace.c
-sed -i '/^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT$/,/^#endif/ { /^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT/d; /^#endif.*CONFIG_KSU_SUSFS_SUS_MOUNT/d }' fs/namespace.c
-sed -i '/^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT$/,/^#endif/ { /^#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT/d; /^#endif.*CONFIG_KSU_SUSFS_SUS_MOUNT/d }' fs/namespace.c
+awk '
+/susfs_alloc_unshare_ksu_vfsmnt/ { count1++ }
+/susfs_alloc_non_unshare_ksu_vfsmnt/ { count2++ }
+count1 > 1 && /susfs_alloc_unshare_ksu_vfsmnt/,/^}$/ { next }
+count2 > 1 && /susfs_alloc_non_unshare_ksu_vfsmnt/,/^}$/ { next }
+{ print }
+' fs/namespace.c > tmp && mv tmp fs/namespace.c
 
 if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
     sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
