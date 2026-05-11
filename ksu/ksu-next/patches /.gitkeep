@@ -1,5 +1,0 @@
-mkdir -p "$outside/ksu/ksu-next/patches"
-touch "$outside/ksu/ksu-next/patches/.gitkeep"
-
-mkdir -p "$outside/ksu/ksu-next/sus_patches"
-touch "$outside/ksu/ksu-next/sus_patches/.gitkeep"
