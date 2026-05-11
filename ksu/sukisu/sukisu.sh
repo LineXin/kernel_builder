@@ -34,6 +34,8 @@ else
   exit 1
 fi
 
+sed -i 's/susfs_is_sdcard_android_data_decrypted/susfs_is_sdcard_android_data_not_decrypted/g' fs/namespace.c
+
 if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
     sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
 fi
