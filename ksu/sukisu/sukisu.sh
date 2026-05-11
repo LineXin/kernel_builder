@@ -43,6 +43,9 @@ count1 > 1 && /susfs_alloc_unshare_ksu_vfsmnt/,/^}$/ { next }
 count2 > 1 && /susfs_alloc_non_unshare_ksu_vfsmnt/,/^}$/ { next }
 { print }
 ' fs/namespace.c > tmp && mv tmp fs/namespace.c
+for i in 1 2 3 4 5; do
+  echo "#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT" >> fs/namespace.c
+done
 
 if ! grep -q "susfs.h" drivers/kernelsu/supercall/supercall.c 2>/dev/null; then
     sed -i '1i#include <linux/susfs.h>' drivers/kernelsu/supercall/supercall.c
