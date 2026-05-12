@@ -19,7 +19,7 @@ echo 'CONFIG_KSU_EXTRAS=y' >> "${defconfig_file}"
 echo '# CONFIG_KSU_SUSFS_TRY_UMOUNT is not set' >> "${defconfig_file}"
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
-    patch -p1 < "$patch_file"
+    git am "$patch_file"
   done
 else
   echo "patching ksu failed, the kernel version you want to patch doesnt have patches here yet"
@@ -27,7 +27,7 @@ fi
 
 # if [[ -d "$suspatchesdir" ]]; then
 #   for patch_file in "$suspatchesdir"/*.patch ; do
-#     patch -p1 < "$patch_file"
+#     git am "$patch_file"
 #   done
 # else
 #   echo "patching ksu susfs failed, the kernel version you want to patch doesnt have patches here yet"
