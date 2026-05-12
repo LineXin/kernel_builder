@@ -11,8 +11,8 @@ git add . && git commit -am "drivers: KernelSU"
 KSU_git_ver=$(cd KernelSU-Next && git rev-list --count HEAD)
 KSU_ver=$(($KSU_git_ver + 10000 + 200))
 
-patchesdir="${maindir}/ksu/ksu-next/patches/"
-suspatchesdir="${maindir}/ksu/ksu-next/sus_patches/"
+patchesdir="$outside/ksu/ksu-next/patches/"
+suspatchesdir="$outside/ksu/ksu-next/sus_patches/"
 
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
