@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if ! grep -q "int path_umount" fs/namespace.c; then
     cat <<EOF >> fs/namespace.c
 
