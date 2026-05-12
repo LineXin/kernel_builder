@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# white
+# white =)
 
 export maindir="$(pwd)"
 export outside="${maindir}/.."
