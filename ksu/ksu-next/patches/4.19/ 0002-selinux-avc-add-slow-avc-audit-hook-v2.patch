@@ -39,14 +39,15 @@ index 0ca02231a848..d66f436f53e4 100644
 
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
-@@ -73,6 +73,34 @@
+@@ -76,6 +76,28 @@
  
- /* Spinlock for ‘struct mount’ member changes */
+ /* Spinlock for 'struct mount' member changes */
  static DEFINE_SPINLOCK(mount_lock);
 +
-+static int can_umount(const struct path *path, int flags)
++int path_umount(struct path *path, int flags)
 +{
 +	struct mount *mnt = real_mount(path->mnt);
++	int ret;
 +
 +	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
 +		return -EINVAL;
@@ -54,25 +55,9 @@ index 0ca02231a848..d66f436f53e4 100644
 +		return -EPERM;
 +	if (path->dentry != path->mnt->mnt_root)
 +		return -EINVAL;
-+	if (!check_mnt(mnt))
-+		return -EINVAL;
-+	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
-+		return -EINVAL;
-+	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+	return 0;
-+}
 +
-+int path_umount(struct path *path, int flags)
-+{
-+	struct mount *mnt = real_mount(path->mnt);
-+	int ret;
++	ret = do_umount(mnt, flags);
 +
-+	ret = can_umount(path, flags);
-+	if (!ret)
-+		ret = do_umount(mnt, flags);
-+
-+	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
 +	dput(path->dentry);
 +	mntput_no_expire(mnt);
 +	return ret;
@@ -81,6 +66,16 @@ index 0ca02231a848..d66f436f53e4 100644
  
  static inline void lock_mount_hash(void)
  {
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2448,6 +2448,7 @@
+ extern int do_remount(struct path *, int, int, void *);
+ #endif
+ extern int do_umount(struct vfsmount *, int);
++extern int path_umount(struct path *, int);
+ extern int do_mount(const char *, const char __user *, const char *, unsigned long, void *);
+ extern struct vfsmount *collect_mounts(const struct path *);
+ extern void drop_collected_mounts(struct vfsmount *);
 
 -- 
 2.53.0
