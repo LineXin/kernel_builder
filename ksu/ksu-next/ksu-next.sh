@@ -32,6 +32,10 @@ fi
 #   exit 1
 # fi
 
+if [[ -f "$patchesdir/fix.sh" ]]; then
+  bash "$patchesdir/fix.sh"
+fi
+
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-ksn${KSU_ver}\"/" "${defconfig_file}"
 
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
