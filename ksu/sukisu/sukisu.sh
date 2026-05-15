@@ -6,7 +6,7 @@ export maindir="$(pwd)"
 export outside="${maindir}/.."
 source "${outside}/$1env"
 
-curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-builtin
+curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s builtin
 # curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
 git add . && git commit -am "drivers: KernelSU"
 SUKI_DIR="drivers/kernelsu"
