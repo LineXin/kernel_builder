@@ -25,4 +25,4 @@ sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-msu${KSU_ver}\"/" "
 
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
 
-echo -e " \nMambolSU Version Enable, ksu ver ${KSU_ver}" >> banner_append
+echo -e " \nMamboSU Version Enable, ksu ver ${KSU_ver}" >> banner_append

@@ -13,7 +13,7 @@ SUKI_DIR="drivers/kernelsu"
 KSU_git_ver=$(cd $SUKI_DIR && git rev-list --count HEAD)
 KSU_ver=$(($KSU_git_ver + 10000 + 200))
 
-patchesdir="$outside/ksu/sukisu/hooks"
+patchesdir="$outside/ksu/sukisu/hooks/resuki"
 
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
