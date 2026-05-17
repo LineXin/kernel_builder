@@ -155,6 +155,12 @@ jobs:
                 bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
                 bash ../build.sh "$COMPILERS"
               ;;
+                "msu" )
+                bash ../tg_utils.sh msg "gh $RUN_NUM: KernelSU-Next patching enabled, patching"
+                bash ../ksu/mambo/msu.sh
+                bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
+                bash ../build.sh "$COMPILERS"
+              ;;
             esac
 
         - name: upload
