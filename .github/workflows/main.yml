@@ -162,7 +162,7 @@ jobs:
                 bash ../build.sh "$COMPILERS"
               ;;
                 "kali" )
-                bash ../tg_utils.sh msg "gh $RUN_NUM: MamboSU patching enabled, patching"
+                bash ../tg_utils.sh msg "gh $RUN_NUM: Kali NetHunter patching enabled, patching"
                 bash ../ksu/nethunter/kali.sh
                 bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
                 bash ../build.sh "$COMPILERS"
