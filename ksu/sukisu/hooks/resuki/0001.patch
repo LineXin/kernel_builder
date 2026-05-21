@@ -114,7 +114,7 @@ index 376543199..f276cb11d 100644
  		error = cp_compat_stat(&stat, statbuf);
 +
 +#ifdef CONFIG_KSU_MANUAL_HOOK
-+	ksu_handle_newfstat_ret(&fd, &statbuf);
++	ksu_handle_newfstat_ret(&fd, (struct stat __user **)&statbuf);
 +#endif
  	return error;
  }
