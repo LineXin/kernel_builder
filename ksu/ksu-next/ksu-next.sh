@@ -21,6 +21,7 @@ else
   exit 1
 fi
 
+bash "$patchesdir/add_path_umount.sh"
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-ks${KSU_ver}\"/" "${defconfig_file}"
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
 echo -e " \nKernelSU Next Version Enable, ksu ver ${KSU_ver}" >> banner_append
