@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# hdjsjfjjwufbeizihfjejzf
+# white
 
 export maindir="$(pwd)"
 export outside="${maindir}/.."
@@ -12,16 +12,42 @@ KSU_git_ver=$(cd KernelSU-Next && git rev-list --count HEAD)
 KSU_ver=$(($KSU_git_ver + 10000 + 200))
 
 patchesdir="$outside/ksu/ksu-next/patches/$(echo $kernel_ver | cut -d. -f1,2)"
+
 if [[ -d "$patchesdir" ]]; then
   for patch_file in "$patchesdir"/*.patch ; do
-    git apply --ignore-whitespace "$patch_file" || patch -p1 < "$patch_file"
+    git am "$patch_file"
   done
 else
   echo "patching ksu failed, the kernel version you want to patch doesnt have patches here yet"
   exit 1
 fi
 
-bash "$patchesdir/add_path_umount.sh"
+if ! grep -q "int path_umount" fs/namespace.c; then
+    cat <<EOF >> fs/namespace.c
+
+int path_umount(struct path *path, int flags)
+{
+    struct mount *mnt = real_mount(path->mnt);
+    int ret;
+
+    if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
+        return -EINVAL;
+    if (!may_mount())
+        return -EPERM;
+    if (path->dentry != path->mnt->mnt_root)
+        return -EINVAL;
+
+    ret = do_umount(mnt, flags);
+
+    dput(path->dentry);
+    mntput_no_expire(mnt);
+    return ret;
+}
+EXPORT_SYMBOL(path_umount);
+EOF
+fi
+
+sed -i '/int do_umount(/a int path_umount(struct path *path, int flags);' include/linux/fs.h
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-ksn${KSU_ver}\"/" "${defconfig_file}"
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
-echo -e " \nKernelSU Next Version Enable, ksn ver ${KSU_ver}" >> banner_append
+echo -e " \nKernelSU-Next Version Enable, ksn ver ${KSU_ver}" >> banner_append
