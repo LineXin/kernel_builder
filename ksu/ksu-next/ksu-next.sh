@@ -6,7 +6,6 @@ export maindir="$(pwd)"
 export outside="${maindir}/.."
 source "${outside}/$1env"
 
-# Установка KernelSU
 curl -LSs "https://raw.githubusercontent.com/KernelSU-Next/KernelSU-Next/next/kernel/setup.sh" | bash -s legacy
 git add . && git commit -am "drivers: KernelSU"
 KSU_git_ver=$(cd KernelSU-Next && git rev-list --count HEAD)
@@ -17,12 +16,11 @@ patchesdir="$outside/ksu/ksu-next/patches/$(echo $kernel_ver | cut -d. -f1,2)"
 if [[ -d "$patchesdir" ]]; then
     for patch_file in "$patchesdir"/*.patch ; do
         echo "Applying patch: $(basename $patch_file)"
-        # Используем patch вместо git am
         if patch -p1 --dry-run < "$patch_file" 2>/dev/null; then
             patch -p1 < "$patch_file"
-            echo "✓ Success"
+            echo "Success"
         else
-            echo "⚠ Patch may already be applied, checking..."
+            echo "Patch may already be applied, checking..."
             patch -p1 --dry-run -R < "$patch_file" 2>/dev/null
             if [ $? -eq 0 ]; then
                 echo "✓ Patch already applied, skipping"
