@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# hdjsjfjjwufbeizihfjejzf
+# UwU
 
 export maindir="$(pwd)"
 export outside="${maindir}/.."
