@@ -172,10 +172,3 @@ index 0ca02231a848..4a2433ac6235 100644
  
  	if (!a) {
  		a = &stack_data;
-
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index 0000000..0000000 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -1,3 +1,4 @@
-+EXPORT_SYMBOL(sel_handle_status_ops);
