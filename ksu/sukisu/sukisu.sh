@@ -9,8 +9,10 @@ source "${outside}/$1env"
 # curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s builtin
 curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
 git add . && git commit -am "drivers: KernelSU"
-find . -name "static_export_check.mk" -delete
 SUKI_DIR="drivers/kernelsu"
+if [ -f "$SUKI_DIR/kernel/tools/static_export_check.mk" ]; then
+  > "$SUKI_DIR/kernel/tools/static_export_check.mk"
+fi
 KSU_git_ver=$(cd $SUKI_DIR && git rev-list --count HEAD)
 KSU_ver=$(($KSU_git_ver + 10000 + 200))
 
