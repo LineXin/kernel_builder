@@ -9,6 +9,7 @@ source "${outside}/$1env"
 # curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s builtin
 curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
 git add . && git commit -am "drivers: KernelSU"
+find . -name "static_export_check.mk" -delete
 SUKI_DIR="drivers/kernelsu"
 KSU_git_ver=$(cd $SUKI_DIR && git rev-list --count HEAD)
 KSU_ver=$(($KSU_git_ver + 10000 + 200))
@@ -33,17 +34,6 @@ fi
 #  echo "patching susfs failed, the kernel version you want to patch doesnt have patches here yet"
 #  exit 1
 #fi
-
-if grep -q "sel_handle_status_ops" security/selinux/selinuxfs.c; then
-  if ! grep -q "EXPORT_SYMBOL.*sel_handle_status_ops" security/selinux/selinuxfs.c; then
-    echo "Adding EXPORT_SYMBOL(sel_handle_status_ops) to selinuxfs.c..."
-    sed -i '/^static const struct file_operations sel_handle_status_ops = {/,/^};/s/^};/};\nEXPORT_SYMBOL(sel_handle_status_ops);/' security/selinux/selinuxfs.c
-  else
-    echo "EXPORT_SYMBOL(sel_handle_status_ops) already exists, skipping..."
-  fi
-else
-  echo "WARNING: sel_handle_status_ops not found in selinuxfs.c!"
-fi
 
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-suki${KSU_ver}\"/" "${defconfig_file}"
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
