@@ -177,7 +177,7 @@ diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
 index 0000000..0000000 100644
 --- a/security/selinux/selinuxfs.c
 +++ b/security/selinux/selinuxfs.c
-@@ -233,6 +233,7 @@ static const struct file_operations sel_handle_status_ops = {
+@@ -270,6 +270,7 @@ static const struct file_operations sel_handle_status_ops = {
  	.mmap		= sel_mmap_handle_status,
  	.llseek		= generic_file_llseek,
  };
