@@ -34,6 +34,17 @@ fi
 #  exit 1
 #fi
 
+if grep -q "sel_handle_status_ops" security/selinux/selinuxfs.c; then
+  if ! grep -q "EXPORT_SYMBOL.*sel_handle_status_ops" security/selinux/selinuxfs.c; then
+    echo "Adding EXPORT_SYMBOL(sel_handle_status_ops) to selinuxfs.c..."
+    sed -i '/^static const struct file_operations sel_handle_status_ops = {/,/^};/s/^};/};\nEXPORT_SYMBOL(sel_handle_status_ops);/' security/selinux/selinuxfs.c
+  else
+    echo "EXPORT_SYMBOL(sel_handle_status_ops) already exists, skipping..."
+  fi
+else
+  echo "WARNING: sel_handle_status_ops not found in selinuxfs.c!"
+fi
+
 sed -i "s/\(CONFIG_LOCALVERSION=\)\(.*\)/\1\"-${kernel_name}-suki${KSU_ver}\"/" "${defconfig_file}"
 echo "$(grep 'CONFIG_LOCALVERSION=' ${defconfig_file})"
 echo -e " \nReSukiSU Enable! resukisu ver ${KSU_ver}" >> banner_append
