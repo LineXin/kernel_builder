@@ -6,8 +6,8 @@ export maindir="$(pwd)"
 export outside="${maindir}/.."
 source "${outside}/$1env"
 
-# curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
-curl -LSs "https://raw.githubusercontent.com/White-Society/ReSukiSU-Old/main/kernel/setup.sh" | bash
+curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
+# curl -LSs "https://raw.githubusercontent.com/White-Society/ReSukiSU-Old/main/kernel/setup.sh" | bash
 git add . && git commit -am "drivers: KernelSU"
 SUKI_DIR="drivers/kernelsu"
 KSU_git_ver=$(cd $SUKI_DIR && git rev-list --count HEAD)
