@@ -134,6 +134,7 @@ index 3a87fee47d3a..0f3d74f92d80 100644
  	/* We only trust the superuser with rebooting the system. */
  	if (!ns_capable(pid_ns->user_ns, CAP_SYS_BOOT))
  		return -EPERM;
+   
 diff --git a/security/selinux/avc.c b/security/selinux/avc.c
 index 0ca02231a848..4a2433ac6235 100644
 --- a/security/selinux/avc.c
@@ -159,6 +160,26 @@ index 0ca02231a848..4a2433ac6235 100644
  
  	if (!a) {
  		a = &stack_data;
+
+diff --git a/kernel/umount_manager.c b/kernel/umount_manager.c
+index bd8be063..467d4c6e 100644
+--- a/kernel/umount_manager.c
++++ b/kernel/umount_manager.c
+@@ -4,6 +4,7 @@
+ #include <linux/namei.h>
+ #include <linux/path.h>
+ #include <linux/mount.h>
++#include <linux/fs.h>
+ #include <linux/cred.h>
+ 
+ #include "klog.h"
+@@ -350,4 +351,4 @@ int ksu_umount_manager_clear_custom(void)
+ 
+     pr_info("Umount manager: cleared %u custom entries\n", cleared);
+     return 0;
+-}
+\ No newline at end of file
++}
 -- 
 2.54.0
 
