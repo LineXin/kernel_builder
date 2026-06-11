@@ -196,16 +196,3 @@ index fa3f48a51..51abba9aa 100644
 +
  	return __sys_setresuid(ruid, euid, suid);
  }
-
- diff --git a/include/linux/rmap.h b/include/linux/rmap.h
-index 45fdb9bdf..7d3f62496 100644
---- a/include/linux/rmap.h
-+++ b/include/linux/rmap.h
-@@ -36,6 +36,8 @@ struct anon_vma {
- 	struct anon_vma *root;
- 	struct rw_semaphore rwsem;
-+	unsigned long num_children;
-+	unsigned long num_active_vmas;
- 	atomic_t refcount;
- 
- 	/*
