@@ -153,3 +153,16 @@ index 921ef0527..aa72efc63 100644
  	if (check_poweroff_charger_mode()){
  		pr_warn("poweroff charging skip this detect\n");
  	} else {
+
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index 45fdb9bdf..7d3f62496 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -36,6 +36,8 @@ struct anon_vma {
+ 	struct anon_vma *root;
+ 	struct rw_semaphore rwsem;
++	unsigned long num_children;
++	unsigned long num_active_vmas;
+ 	atomic_t refcount;
+ 
+ 	/*
