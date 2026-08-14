@@ -123,7 +123,7 @@ jobs:
                 bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
                 bash ../build.sh "$COMPILERS"
                 bash ../tg_utils.sh msg "gh $RUN_NUM: KernelSU patching enabled, patching"
-                bash ../ksu/rkus/applyPatches.sh
+                bash ../ksu/rksu/applyPatches.sh
                 bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
                 bash ../build.sh "$COMPILERS"
               ;;
