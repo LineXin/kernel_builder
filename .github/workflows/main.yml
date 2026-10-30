@@ -23,8 +23,12 @@ on: # [push]
         default: 'https://github.com/MrGadget84/white_kernel_xiaomi_blossom-oss'
       KBRANCH:
         description: 'kernel branch'
-        required: true
-        default: 'infinity'
+        type: choice
+        options:
+          - infinity
+          - droidspaces
+          - recovery
+        default: legacy
       NOTES:
         description: 'notes to print out'
         required: false
@@ -45,6 +49,11 @@ on: # [push]
         description: 'if dont want ksu then leave blank'
         required: false
         default: 'suki'
+      DS:
+        description: "Droidspaces"
+        type: boolean
+        default: false
+
       TG_RECIPENT:
         description: 'group id'
         required: true
@@ -66,6 +75,7 @@ env:
   SUFFIX: ${{ github.event.inputs.SUFFIX }}
   zipper_repo: ${{ github.event.inputs.ZREPO }}
   zipper_branch: ${{ github.event.inputs.ZBRANCH }}
+  DS: ${{ github.event.inputs.DS }}
   TZ: Asia/Ho_Chi_Minh
 
 jobs:
@@ -118,6 +128,12 @@ jobs:
         - name: run compilation scripts
           run: |
             cd kernel
+            case $DS in
+              "true" )
+                bash ../tg_utils.sh msg "gh $RUN_NUM: Droidspaces patching enabled, patching"
+                bash ../ksu/ds/ds.sh
+              ;;
+            esac
             case $PATCH_KSU in
               "both" )
                 bash ../tg_utils.sh msg "gh $RUN_NUM: running compilation script(s): $COMPILERS"
