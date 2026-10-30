@@ -1,23 +1,20 @@
-From 7f3c2a1d9e8b4a6c5d0e1f2a3b4c5d6e7f8a9b0c Mon Sep 17 00:00:00 2001
+From 5011f9b440c8c4144473d9a26171fc8ecf59d059 Mon Sep 17 00:00:00 2001
 From: ChatGPT <noreply@openai.com>
 Date: Fri, 30 Oct 2026 18:00:00 +0000
-Subject: [PATCH] Droidspaces/LXC: apply compatibility and kernel fixes
+Subject: [PATCH] Droidspaces/LXC: combine compatibility and vmscan fixes
 
-Apply the Droidspaces/LXC compatibility fixes and declare the missing
-shrinker_rwsem semaphore used by mm/vmscan.c.
-
-Changes:
-- Avoid unsafe dev_get_stats() access for inactive xt_qtaguid interfaces.
-- Restore cgroup file prefix handling for CGRP_ROOT_NOPREFIX roots.
-- Declare shrinker_rwsem separately from shrinker_rwlock.
+- Avoid unsafe dev_get_stats() access in xt_qtaguid.
+- Restore cgroup file prefix compatibility.
+- Declare the missing shrinker_rwsem used by mm/vmscan.c.
 
 ---
- mm/vmscan.c                | 1 +
- net/netfilter/xt_qtaguid.c | 9 +--------
+ net/netfilter/xt_qtaguid.c | 10 +++-------
  kernel/cgroup/cgroup.c     | 5 +++++
- 3 files changed, 7 insertions(+), 8 deletions(-)
+ mm/vmscan.c                | 1 +
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/net/netfilter/xt_qtaguid.c b/net/netfilter/xt_qtaguid.c
+index 8cb9c30bf..bf4bd9f56 100755
 --- a/net/netfilter/xt_qtaguid.c
 +++ b/net/netfilter/xt_qtaguid.c
 @@ -739,7 +739,7 @@ static int iface_stat_fmt_proc_show(struct seq_file *m, void *v)
@@ -45,16 +42,15 @@ diff --git a/net/netfilter/xt_qtaguid.c b/net/netfilter/xt_qtaguid.c
  	 * If the meaning of the data changes, then update the fmtX
  	 * string.
 diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 694b1cc8d..d0d04bff1 100755
 --- a/kernel/cgroup/cgroup.c
 +++ b/kernel/cgroup/cgroup.c
-@@ -3496,5 +3496,12 @@ static int cgroup_add_file(struct cgroup_subsys_state *css, struct cgroup *cgrp,
+@@ -3496,5 +3496,10 @@ static int cgroup_add_file(struct cgroup_subsys_state *css, struct cgroup *cgrp,
  		spin_unlock_irq(&cgroup_file_kn_lock);
  	}
 
-+	if (cft->ss && (cgrp->root->flags & CGRP_ROOT_NOPREFIX) &&
-+	    !(cft->flags & CFTYPE_NO_PREFIX)) {
-+		snprintf(name, CGROUP_FILE_NAME_MAX, "%s.%s", cft->ss->name,
-+			 cft->name);
++	if (cft->ss && (cgrp->root->flags & CGRP_ROOT_NOPREFIX) && !(cft->flags & CFTYPE_NO_PREFIX)) {
++		snprintf(name, CGROUP_FILE_NAME_MAX, "%s.%s", cft->ss->name, cft->name);
 +		kernfs_create_link(cgrp->kn, name, kn);
 +	}
 +
@@ -63,11 +59,12 @@ diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
 diff --git a/mm/vmscan.c b/mm/vmscan.c
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -1,3 +1,4 @@
+@@ -188,5 +188,6 @@ unsigned long vm_total_pages;
  static LIST_HEAD(shrinker_list);
  static DEFINE_SPINLOCK(shrinker_lock);
  static DEFINE_RWLOCK(shrinker_rwlock);
 +static DECLARE_RWSEM(shrinker_rwsem);
 
+ #ifdef CONFIG_MEMCG_KMEM
 --
 2.39.0
