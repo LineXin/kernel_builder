@@ -25,7 +25,7 @@ on: # [push]
         description: 'kernel branch'
         type: choice
         options:
-          - lineageos-23.2
+          - lineage-23.2
           - droidspaces
           - recovery
         default: legacy
