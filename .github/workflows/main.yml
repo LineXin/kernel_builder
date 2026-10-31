@@ -20,12 +20,12 @@ on: # [push]
       KREPO:
         description: 'kernel repo'
         required: true
-        default: 'https://github.com/MrGadget84/white_kernel_xiaomi_blossom-oss'
+        default: 'https://github.com/LineXin/android_kernel_xiaomi_mt6768-k419'
       KBRANCH:
         description: 'kernel branch'
         type: choice
         options:
-          - lineage-23.2
+          - voidline
           - droidspaces
           - recovery
         default: legacy
@@ -40,15 +40,15 @@ on: # [push]
       ZREPO:
         description: 'zipper repo'
         required: true
-        default: 'https://github.com/MrGadget84/AnyKernel3'
+        default: 'https://github.com/LineXin/AnyKernel3'
       ZBRANCH:
         description: 'zipper branch'
         required: true
-        default: 'blossom'
+        default: 'shockwave'
       KSU:
         description: 'if dont want ksu then leave blank'
         required: false
-        default: 'suki'
+        default: 'both'
       DS:
         description: "Droidspaces"
         type: boolean
